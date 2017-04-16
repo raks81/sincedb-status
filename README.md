@@ -1,6 +1,6 @@
 # sincedb-status [WIP]
 
-A simple REST interface to check the status of sincedb that logstash maintains to track the status of files processed.
+A simple REST interface to check the status of sincedb that logstash maintains to track the status of files processed. This is useful when parsing log files that were exported out from some application. It can also be used when during performance/system testing logstash implementations where one needs to monitor the progress of the logstash's pipeline.
 
 ## Prerequisites
 * python 3.6
