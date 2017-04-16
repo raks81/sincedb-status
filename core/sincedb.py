@@ -1,7 +1,7 @@
 import os
 
 
-def get_files(inodes, start_path):
+def get_files(start_path):
     all_files = {}
     for root, dirs, files in os.walk(start_path):
         for file in files:
@@ -30,7 +30,7 @@ def merge_path_stats(sincedb, all_paths):
             file['path'] = all_paths[inode]['path']
             file['size'] = all_paths[inode]['size']
             if int(all_paths[inode]['size']) > 0:
-                file['percent'] = round(int(file['offset']) / int(all_paths[inode]['size']), 2) * 100
+                file['percent_complete'] = round(int(file['offset']) / int(all_paths[inode]['size']) * 100, 2)
     print(sincedb)
     return sincedb
 
