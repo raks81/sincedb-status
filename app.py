@@ -13,7 +13,8 @@ def index():
 def status():
     parsed_sincedb = sincedb.parse_sincedb(request.args.get('sincedb'))
     all_files = sincedb.get_files(request.args.get('path'))
-    return jsonify(sincedb.merge_path_stats(parsed_sincedb, all_files))
+    return jsonify(
+        sincedb.merge_path_stats(parsed_sincedb, all_files, ignore_missing=request.args.get('ignore_missing')))
 
 
 if __name__ == '__main__':

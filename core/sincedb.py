@@ -8,7 +8,6 @@ def get_files(start_path):
             path = root + os.sep + file
             stats = os.stat(path)
             all_files[str(stats.st_ino)] = {'path': path, 'inode': stats.st_ino, 'size': stats.st_size}
-    print(all_files)
     return all_files
 
 
@@ -19,19 +18,19 @@ def parse_sincedb(path):
             inode, maj_dev, min_dev, offset = line.strip().split(' ', 4)
             if inode != '0':
                 sincedb[inode] = {'inode': inode, 'offset': offset}
-    print(sincedb)
     return sincedb
 
 
-def merge_path_stats(sincedb, all_paths):
-    for inode in sincedb.keys():
+def merge_path_stats(sincedb, all_paths, **kwargs):
+    for inode in list(sincedb):
         file = sincedb[inode]
         if inode in all_paths.keys():
             file['path'] = all_paths[inode]['path']
             file['size'] = all_paths[inode]['size']
             if int(all_paths[inode]['size']) > 0:
                 file['percent_complete'] = round(int(file['offset']) / int(all_paths[inode]['size']) * 100, 2)
-    print(sincedb)
+        elif kwargs['ignore_missing'] == 'y':
+            del(sincedb[inode])
     return sincedb
 
 
