@@ -36,6 +36,13 @@ def merge_path_stats(sincedb, all_paths, ignore_missing='n'):
                 file['percent_complete'] = round(int(file['offset']) / int(all_paths[inode]['size']) * 100, 2)
         elif ignore_missing == 'y':
             del (sincedb[inode])
+
+    # If the file is not in sincedb with 0% progress
+    for inode in all_paths.keys():
+        if inode not in sincedb.keys():
+            sincedb[inode] = {'inode': inode, 'offset': 0, 'path': all_paths.get(inode)['path'],
+                              'size': all_paths.get(inode)['size']}
+
     logger.debug('Merged response: %s' % sincedb)
     return sincedb
 
