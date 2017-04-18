@@ -1,4 +1,7 @@
 import os
+import logging
+
+logger = logging.getLogger('sincedb')
 
 
 def get_files(start_path):
@@ -8,6 +11,7 @@ def get_files(start_path):
             path = root + os.sep + file
             stats = os.stat(path)
             all_files[str(stats.st_ino)] = {'path': path, 'inode': stats.st_ino, 'size': stats.st_size}
+    logger.debug('All files: %s' % all_files)
     return all_files
 
 
@@ -18,10 +22,11 @@ def parse_sincedb(path):
             inode, maj_dev, min_dev, offset = line.strip().split(' ', 4)
             if inode != '0':
                 sincedb[inode] = {'inode': inode, 'offset': offset}
+    logger.debug('Raw sincedb: %s' % sincedb)
     return sincedb
 
 
-def merge_path_stats(sincedb, all_paths, **kwargs):
+def merge_path_stats(sincedb, all_paths, ignore_missing='n'):
     for inode in list(sincedb):
         file = sincedb[inode]
         if inode in all_paths.keys():
@@ -29,8 +34,9 @@ def merge_path_stats(sincedb, all_paths, **kwargs):
             file['size'] = all_paths[inode]['size']
             if int(all_paths[inode]['size']) > 0:
                 file['percent_complete'] = round(int(file['offset']) / int(all_paths[inode]['size']) * 100, 2)
-        elif kwargs['ignore_missing'] == 'y':
+        elif ignore_missing == 'y':
             del (sincedb[inode])
+    logger.debug('Merged response: %s' % sincedb)
     return sincedb
 
 
