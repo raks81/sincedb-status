@@ -30,7 +30,7 @@ def merge_path_stats(sincedb, all_paths, **kwargs):
             if int(all_paths[inode]['size']) > 0:
                 file['percent_complete'] = round(int(file['offset']) / int(all_paths[inode]['size']) * 100, 2)
         elif kwargs['ignore_missing'] == 'y':
-            del(sincedb[inode])
+            del (sincedb[inode])
     return sincedb
 
 
